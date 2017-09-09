@@ -1,12 +1,18 @@
 import { connect } from 'react-redux';
 import App from '../components/App';
 
-const mapStateToProps = state => ({
-  youtubeView: true,
-});
+const mapStateToProps = state => {
+  return {
+    youtubeView: state.youtubeView,
+    currentWord: state.words.currentWord,
+  }
+};
 
 const mapDispatchToProps = dispatch => ({
-  showForm: () => {
+  newWord: () => {
+    dispatch({
+      type: 'NEW_WORD'
+    })
   },
 });
 
