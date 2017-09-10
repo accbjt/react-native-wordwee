@@ -1,12 +1,15 @@
 import React from 'react';
 import {
   WebView,
+  View,
+  TouchableOpacity,
+  Text,
 } from 'react-native';
 
-const YoutubeView = () => (
+const YoutubeView = (props) => (
   <WebView
-    source={{uri: 'https://youtube.com'}}
-    style={{marginTop: 20}}
+    source={{uri: `https://www.youtube.com/results?sp=CANQFA%253D%253D&q=${props.url}`}}
+    scalesPageToFit={true}
   />
 )
 
