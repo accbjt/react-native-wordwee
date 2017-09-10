@@ -7,7 +7,7 @@ import {
   TextInput,
   Text,
   View,
-  Button,
+  TouchableOpacity,
 } from 'react-native';
 
 Tts.setDefaultVoice('com.apple.ttsbundle.Tessa-compact');
@@ -16,6 +16,10 @@ const speak = (props) => {
   setTimeout(() => {
     Tts.speak(props.currentWord);
   }, 200)
+}
+
+const capitalize = word => {
+  return `${word[0].toUpperCase()}${word.slice(1)}`
 }
 
 const App = (props) => {
@@ -27,15 +31,38 @@ const App = (props) => {
     speak(props)
 
     return (
-      <View>
+      <View
+        style={{
+          flex: 1,
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
         {
           props.words.map((word, i) => (
-            <Button
+            <TouchableOpacity
+              style={{
+                borderColor: 'gray',
+                borderSize: 1,
+                backgroundColor: '#6da4ff',
+                width: '60%',
+                padding: 10,
+                margin: 5,
+                borderRadius: 35,
+              }}
               key={`word-${i}`}
-              title={word.toUpperCase()}
-              color="#841584"
               onPress={() => { props.newWord(word, props.currentWord) }}
-            />
+            >
+            <Text
+              style={{
+                textAlign: 'center',fontSize: 50,
+                fontFamily: 'ChalkboardSE-Bold',
+                color: 'white',
+              }}
+            >{word.toUpperCase()}
+            </Text>
+          </TouchableOpacity>
           ))
         }
       </View>
@@ -46,10 +73,33 @@ const App = (props) => {
     }
 
     return (
-      <View>
-        <Text>{props.currentWord.toLocaleUpperCase()}</Text>
+      <View
+        style={{
+          flex: 1,
+          flexDirection: 'column',
+          alignItems: 'center',
+          backgroundColor: '#6da4ff',
+        }}
+      >
+        <Text
+          style={{
+            fontSize: 50,
+            fontFamily: 'ChalkboardSE-Bold',
+            color: 'white',
+            textShadowColor: 'black',
+            textShadowOffset: { width: 1, height: 1 },
+            textShadowRadius: 1,
+          }}
+        >{capitalize(props.currentWord)}</Text>
         <TextInput
-          style={{height: 40, borderColor: 'gray', borderWidth: 1}}
+          style={{
+            height: 50,
+            textAlign: 'center',
+            width: '100%',
+            fontSize: 50,
+            fontFamily: 'ChalkboardSE-Bold',
+            color: 'white',
+          }}
           onChangeText={(text) => props.updateInputValue(text, props.currentWord)}
           value={props.inputValue}
           autoFocus={true}

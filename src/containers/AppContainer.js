@@ -2,6 +2,10 @@ import { connect } from 'react-redux';
 import App from '../components/App';
 import wordList from '../../store/words.json'
 
+const capitalize = word => {
+  return `${word[0].toUpperCase()}${word.slice(1)}`
+}
+
 const mapStateToProps = state => {
   return {
     youtubeView: state.youtube,
@@ -20,13 +24,25 @@ const mapDispatchToProps = (dispatch) => ({
 
     if (currentWord.toLowerCase() === value.toLowerCase()) {
       dispatch({
-        type: 'UPDATE_BUTTONS_VIEW',
-        value: true
+        type: 'UPDATE_INPUT',
+        value,
       })
+
+      setTimeout(()=>{
+        dispatch({
+          type: 'UPDATE_BUTTONS_VIEW',
+          value: true
+        })
+      }, 1000)
     } else if (isMatching){
       dispatch({
         type: 'UPDATE_INPUT',
         value,
+      })
+    } else if (value.length === 1){
+      dispatch({
+        type: 'UPDATE_INPUT',
+        value: '',
       })
     }
   },
@@ -45,7 +61,7 @@ const mapDispatchToProps = (dispatch) => ({
         dispatch({
           type: 'YOUTUBE_VISIBLE'
         })
-      }, 10000)
+      }, 120000)
     } else {
       dispatch({
         type: 'SHUFFLE_WORDS',
