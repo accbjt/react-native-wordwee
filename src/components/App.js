@@ -10,6 +10,8 @@ import {
   Button,
 } from 'react-native';
 
+Tts.setDefaultVoice('com.apple.ttsbundle.Tessa-compact');
+
 const speak = (props) => {
   setTimeout(() => {
     Tts.speak(props.currentWord);
@@ -30,7 +32,7 @@ const App = (props) => {
           props.words.map((word, i) => (
             <Button
               key={`word-${i}`}
-              title={word}
+              title={word.toUpperCase()}
               color="#841584"
               onPress={() => { props.newWord(word, props.currentWord) }}
             />
@@ -50,6 +52,7 @@ const App = (props) => {
           style={{height: 40, borderColor: 'gray', borderWidth: 1}}
           onChangeText={(text) => props.updateInputValue(text, props.currentWord)}
           value={props.inputValue}
+          autoFocus={true}
         />
       </View>
     )
