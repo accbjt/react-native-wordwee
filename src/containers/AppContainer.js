@@ -1,9 +1,17 @@
 import { connect } from 'react-redux';
 import App from '../components/App';
 import wordList from '../../store/words.json'
+import Tts from 'react-native-tts'
+import { checkIfMatching } from '../../store/actions'
+
+Tts.setDefaultVoice('com.apple.ttsbundle.Tessa-compact');
 
 const capitalize = word => {
   return `${word[0].toUpperCase()}${word.slice(1)}`
+}
+
+const speak = (word) => {
+  Tts.speak(word);
 }
 
 const mapStateToProps = state => {
@@ -11,40 +19,18 @@ const mapStateToProps = state => {
     youtubeView: state.youtube,
     youtubeSearch: state.youtubeSearch.search,
     currentWord: state.words.currentWord,
-    inputValue: state.words.inputValue,
     buttons: state.words.buttons,
     words: state.words.buttonWords,
+    letterOptions: state.words.letterOptions,
+    letterIndex: state.words.currentLetterIndex,
+    speak,
   }
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  updateInputValue: (value, currentWord) => {
-    const word = currentWord.slice(0, value.length).toLowerCase()
-    const isMatching = word == value.toLowerCase()
-
-    if (currentWord.toLowerCase() === value.toLowerCase()) {
-      dispatch({
-        type: 'UPDATE_INPUT',
-        value,
-      })
-
-      setTimeout(()=>{
-        dispatch({
-          type: 'UPDATE_BUTTONS_VIEW',
-          value: true
-        })
-      }, 1000)
-    } else if (isMatching){
-      dispatch({
-        type: 'UPDATE_INPUT',
-        value,
-      })
-    } else if (value.length === 1){
-      dispatch({
-        type: 'UPDATE_INPUT',
-        value: '',
-      })
-    }
+  updateInputValue: (value) => {
+    speak(value)
+    dispatch(checkIfMatching(value))
   },
   newWord: (word, currentWord) => {
     if (word === currentWord) {
@@ -61,7 +47,7 @@ const mapDispatchToProps = (dispatch) => ({
         dispatch({
           type: 'YOUTUBE_VISIBLE'
         })
-      }, 120000)
+      }, 5000)
     } else {
       dispatch({
         type: 'SHUFFLE_WORDS',

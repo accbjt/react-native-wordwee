@@ -1,34 +1,76 @@
 import React from 'react'
 import YoutubeView from './YoutubeView'
-import Tts from 'react-native-tts'
 import {
   AppRegistry,
   StyleSheet,
   TextInput,
   Text,
   View,
-  TouchableOpacity,
+  TouchableHighlight,
 } from 'react-native';
 
-Tts.setDefaultVoice('com.apple.ttsbundle.Tessa-compact');
-
-const speak = (props) => {
-  setTimeout(() => {
-    Tts.speak(props.currentWord);
-  }, 200)
-}
-
-const capitalize = word => {
-  return `${word[0].toUpperCase()}${word.slice(1)}`
-}
+var styles = StyleSheet.create({
+  wordsView: {
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#6da4ff',
+    width: '100%',
+  },
+  rowContainer: {
+    flex: 1,
+    flexDirection: 'row'
+  },
+  word: {
+    fontSize: 50,
+    fontFamily: 'ChalkboardSE-Bold',
+    color: 'white',
+    textShadowColor: 'black',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 1,
+    marginTop: 50,
+    width: '10%',
+  },
+  wordBold: {
+    fontSize: 50,
+    fontFamily: 'ChalkboardSE-Bold',
+    color: 'gray',
+    textShadowColor: 'black',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 1,
+    marginTop: 50,
+    width: '10%',
+  },
+  letterContainer: {
+    backgroundColor: 'white',
+    padding: 2,
+    margin: 15,
+    borderRadius: 30,
+    height: 60,
+    width: 60,
+    alignItems: 'center',
+    borderWidth: 1.0,
+    borderColor: '#d6d7da',
+  },
+  letter: {
+    fontFamily: 'ChalkboardSE-Bold',
+    fontSize: 35,
+    backgroundColor: 'transparent',
+    color: '#6da4ff',
+    borderRadius: 30,
+    textAlign: 'center',
+    lineHeight: 45,
+  },
+});
 
 const App = (props) => {
   if (props.youtubeView) {
     return (
-      <YoutubeView url={props.youtubeSearch}/>
+      <YoutubeView url={props.youtubeSearch} />
     )
   } else if (props.buttons){
-    speak(props)
+    props.speak(props.currentWord)
 
     return (
       <View
@@ -41,14 +83,12 @@ const App = (props) => {
       >
         {
           props.words.map((word, i) => (
-            <TouchableOpacity
+            <TouchableHighlight
               style={{
-                borderColor: 'gray',
-                borderSize: 1,
                 backgroundColor: '#6da4ff',
                 width: '60%',
                 padding: 10,
-                margin: 5,
+                marginTop: 5,
                 borderRadius: 35,
               }}
               key={`word-${i}`}
@@ -62,48 +102,42 @@ const App = (props) => {
               }}
             >{word.toUpperCase()}
             </Text>
-          </TouchableOpacity>
+          </TouchableHighlight>
           ))
         }
       </View>
     )
   } else {
-    if (!props.inputValue) {
-      speak(props)
+    if (!props.letterIndex) {
+      props.speak(props.currentWord)
     }
 
     return (
       <View
-        style={{
-          flex: 1,
-          flexDirection: 'column',
-          alignItems: 'center',
-          backgroundColor: '#6da4ff',
-        }}
+        style={styles.wordsView}
       >
-        <Text
-          style={{
-            fontSize: 50,
-            fontFamily: 'ChalkboardSE-Bold',
-            color: 'white',
-            textShadowColor: 'black',
-            textShadowOffset: { width: 1, height: 1 },
-            textShadowRadius: 1,
-          }}
-        >{capitalize(props.currentWord)}</Text>
-        <TextInput
-          style={{
-            height: 50,
-            textAlign: 'center',
-            width: '100%',
-            fontSize: 50,
-            fontFamily: 'ChalkboardSE-Bold',
-            color: 'white',
-          }}
-          onChangeText={(text) => props.updateInputValue(text, props.currentWord)}
-          value={props.inputValue}
-          autoFocus={true}
-        />
+        <View style={styles.rowContainer}>
+          {props.currentWord.split('').map((letter, i) => (
+            <Text
+              key={`${letter}-${i}`}
+              style={i <= props.letterIndex ? styles.wordBold : styles.word}
+            >{letter}</Text>
+          ))}
+        </View>
+        <View style={styles.rowContainer}>
+          {props.letterOptions.map((letter, i) => (
+            <TouchableHighlight
+              style={styles.letterContainer}
+              key={`letter-${i}`}
+              onPress={() => {props.updateInputValue(letter)}}
+            >
+              <Text
+                style={styles.letter}
+              >{letter}
+              </Text>
+            </TouchableHighlight>
+          ))}
+        </View>
       </View>
     )
   }

@@ -1,5 +1,7 @@
 import wordList from './words.json'
 
+const letters = 'abcdefghijklmnopqrstuvwxyz'
+
 const shuffle = (array) => {
   let currentIndex = array.length, temporaryValue, randomIndex;
 
@@ -26,6 +28,16 @@ const getRandomWords = (currentWord) => {
     ...words.slice(words.indexOf(currentWord) + 1)
   ])
   return shuffle([currentWord, newWords[0], newWords[newWords.length -1]])
+}
+
+const getRandomLetters = (currentLetter) => {
+  const alphabet = letters.split('')
+
+  const newLetters = shuffle([
+    ...alphabet.slice(0, alphabet.indexOf(currentLetter)),
+    ...alphabet.slice(alphabet.indexOf(currentLetter) + 1)
+  ])
+  return shuffle([currentLetter, newLetters[0], newLetters[newLetters.length -1]])
 }
 
 const getRandomWord = () => {
@@ -55,9 +67,10 @@ export const words = (state = wordList, action) => {
       return Object.assign({}, state, {
         currentWord: getRandomWord(),
       })
-    case 'UPDATE_INPUT':
+    case 'UPDATE_INDEX':
       return Object.assign({}, state, {
-        inputValue: action.value,
+        letterOptions: getRandomLetters(state.currentWord[action.index]),
+        currentLetterIndex: action.index,
       })
     case 'UPDATE_BUTTONS_VIEW':
       return Object.assign({}, state, {
@@ -67,6 +80,10 @@ export const words = (state = wordList, action) => {
       return Object.assign({}, state, {
         buttonWords: getRandomWords(action.currentWord),
       })
+    case 'SHUFFLE_LETTERS':
+      return Object.assign({}, state, {
+        letterOptions: getRandomLetters(action.letter)
+      })
     default:
       const randomWord = getRandomWord()
 
@@ -74,7 +91,9 @@ export const words = (state = wordList, action) => {
         currentWord: randomWord,
         inputBox: '',
         buttons: false,
-        buttonWords: getRandomWords(randomWord)
+        buttonWords: getRandomWords(randomWord),
+        letterOptions: getRandomLetters(randomWord[0]),
+        currentLetterIndex: 0,
       })
   }
 };
