@@ -1,5 +1,7 @@
 import React from 'react'
 import YoutubeView from './YoutubeView'
+import Letter from './Letter'
+import WordLetter from './WordLetter'
 import {
   AppRegistry,
   StyleSheet,
@@ -9,7 +11,7 @@ import {
   TouchableHighlight,
 } from 'react-native';
 
-var styles = StyleSheet.create({
+const styles = StyleSheet.create({
   wordsView: {
     flex: 1,
     flexDirection: 'column',
@@ -33,34 +35,14 @@ var styles = StyleSheet.create({
     width: '10%',
   },
   wordBold: {
-    fontSize: 50,
+    fontSize: 60,
     fontFamily: 'ChalkboardSE-Bold',
-    color: 'gray',
+    color: '#fdbf0d',
     textShadowColor: 'black',
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 1,
-    marginTop: 50,
+    marginTop: 42,
     width: '10%',
-  },
-  letterContainer: {
-    backgroundColor: 'white',
-    padding: 2,
-    margin: 15,
-    borderRadius: 30,
-    height: 60,
-    width: 60,
-    alignItems: 'center',
-    borderWidth: 1.0,
-    borderColor: '#d6d7da',
-  },
-  letter: {
-    fontFamily: 'ChalkboardSE-Bold',
-    fontSize: 35,
-    backgroundColor: 'transparent',
-    color: '#6da4ff',
-    borderRadius: 30,
-    textAlign: 'center',
-    lineHeight: 45,
   },
 });
 
@@ -108,9 +90,7 @@ const App = (props) => {
       </View>
     )
   } else {
-    if (!props.letterIndex) {
-      props.speak(props.currentWord)
-    }
+    props.speak(props.currentWord)
 
     return (
       <View
@@ -118,24 +98,22 @@ const App = (props) => {
       >
         <View style={styles.rowContainer}>
           {props.currentWord.split('').map((letter, i) => (
-            <Text
+            <WordLetter
               key={`${letter}-${i}`}
-              style={i <= props.letterIndex ? styles.wordBold : styles.word}
-            >{letter}</Text>
+              i={i}
+              letter={letter}
+              letterIndex={props.letterIndex}
+            />
           ))}
         </View>
         <View style={styles.rowContainer}>
           {props.letterOptions.map((letter, i) => (
-            <TouchableHighlight
-              style={styles.letterContainer}
-              key={`letter-${i}`}
-              onPress={() => {props.updateInputValue(letter)}}
-            >
-              <Text
-                style={styles.letter}
-              >{letter}
-              </Text>
-            </TouchableHighlight>
+            <Letter
+              key={`${letter}-${i}`}
+              index={i}
+              updateInputValue={props.updateInputValue}
+              letter={letter}
+            />
           ))}
         </View>
       </View>

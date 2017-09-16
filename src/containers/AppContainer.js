@@ -47,7 +47,7 @@ const mapDispatchToProps = (dispatch) => ({
         dispatch({
           type: 'YOUTUBE_VISIBLE'
         })
-      }, 5000)
+      }, 120000)
     } else {
       dispatch({
         type: 'SHUFFLE_WORDS',
